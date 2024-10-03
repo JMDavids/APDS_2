@@ -11,7 +11,8 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-
+const cors = require('cors');
+app.use(cors());
 app.use('/api/users', userRoutes)
 app.use('/api/payments', paymentRoutes)
 
