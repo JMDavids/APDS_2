@@ -18,7 +18,7 @@ const paymentSchema = new Schema({
         required: true
     },
     accountInfo:{
-        type: Number,
+        type: String,
         required: true
     },
     swiftCode:{
@@ -28,5 +28,5 @@ const paymentSchema = new Schema({
 }, {timestamps: true})
 
 
-//create the model "book"
+//create the model "payment"
 module.exports = mongoose.model('Payment', paymentSchema)

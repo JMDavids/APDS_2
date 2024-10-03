@@ -1,5 +1,6 @@
 const Payment = require('../models/paymentModel');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 // Get all payments for the logged-in user
 const getPayments = async (req, res) => {
@@ -45,16 +46,21 @@ const createPayment = async (req, res) => {
         return res.status(400).json({ error: 'All fields are required' });
     }
 
+    const salt = await bcrypt.genSalt(10);
+    const hashedAccountInfo = await bcrypt.hash(accountInfo, salt);
+    const hashedSwiftCode = await bcrypt.hash(swiftCode, salt);
+
     // Add the new payment to the database
     try {
         const payment = await Payment.create({
             amount,
             currency,
             provider,
-            accountInfo,
-            swiftCode,
+            accountInfo: hashedAccountInfo,
+            swiftCode: hashedSwiftCode,
             userId, // Associate payment with the user
         });
+
         res.status(200).json(payment);
     } catch (error) {
         res.status(400).json({ error: error.message });
