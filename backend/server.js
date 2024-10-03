@@ -1,13 +1,19 @@
 // backend/server.js
-const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
+require('dotenv').config()
 
-dotenv.config();
+const express = require('express')
+const userRoutes = require ('./routes/userRouter')
+const paymentRoutes = require ('./routes/paymentRouter')
+const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken');
+
 const app = express();
 
 // Middleware
 app.use(express.json());
+
+app.use('/api/users', userRoutes)
+app.use('/api/payments', paymentRoutes)
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
