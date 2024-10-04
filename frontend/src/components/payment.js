@@ -15,11 +15,20 @@ const Payment = () => {
 
     const payment = { amount, currency, provider, accountInfo, swiftCode };
 
+    // Get the JWT token from localStorage
+    const token = JSON.parse(localStorage.getItem('user'))?.token;
+
+    if (!token) {
+      setError('User is not authenticated');
+      return;
+    }
+
     const response = await fetch('http://localhost:5000/api/payments', {
       method: 'POST',
-      body: JSON.stringify(payment), // Converting our payment to JSON
+      body: JSON.stringify(payment), // Converting payment object to JSON
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Attach the JWT token
       },
     });
 
@@ -29,6 +38,7 @@ const Payment = () => {
       setError(json.error);
     }
     if (response.ok) {
+      // Clear form fields after successful submission
       setAmount('');
       setCurrency('');
       setProvider('');
@@ -49,6 +59,7 @@ const Payment = () => {
         type="number"
         onChange={(e) => setAmount(e.target.value)}
         value={amount}
+        required
       />
 
       <label>Currency Type:</label>
@@ -56,6 +67,7 @@ const Payment = () => {
         type="text"
         onChange={(e) => setCurrency(e.target.value)}
         value={currency}
+        required
       />
 
       <label>Payment Provider:</label>
@@ -63,6 +75,7 @@ const Payment = () => {
         type="text"
         onChange={(e) => setProvider(e.target.value)}
         value={provider}
+        required
       />
 
       <label>Account Info:</label>
@@ -70,6 +83,7 @@ const Payment = () => {
         type="text"
         onChange={(e) => setAccountInfo(e.target.value)}
         value={accountInfo}
+        required
       />
 
       <label>Swift Code:</label>
@@ -77,6 +91,7 @@ const Payment = () => {
         type="text"
         onChange={(e) => setSwiftCode(e.target.value)}
         value={swiftCode}
+        required
       />
 
       <button type="submit">Add Payment</button>
