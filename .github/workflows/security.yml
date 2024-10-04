@@ -1,0 +1,58 @@
+name: Security Testing
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js environment (if using Node.js)
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Run ESLint for static code analysis (SAST)
+      - name: Run ESLint (SAST)
+        run: npm run lint
+
+      # Step 5: Run npm audit for dependency security scanning
+      - name: Run npm audit for Dependency Scanning
+        run: npm audit --audit-level=high
+
+      # Step 6: Run TruffleHog to detect secrets in the code
+      - name: Detect Secrets with TruffleHog
+        uses: edplato/trufflehog-actions-scan@v2.0.10
+        with:
+          scan_depth: 50
+
+      # Step 7: OWASP Dependency-Check to scan for vulnerabilities in dependencies
+      - name: OWASP Dependency Check
+        uses: DependencyTrack/github-action@2.0.0
+        with:
+          projectName: "MyProject" # Customize project name
+          failCriteria: 'HIGH' # Fail the build on high vulnerabilities
+          format: 'ALL' # Output formats
+
+      # Step 8: Use GitHub CodeQL for advanced security analysis
+      - name: GitHub CodeQL Analysis
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
