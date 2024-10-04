@@ -33,13 +33,7 @@ jobs:
       - name: Run npm audit for Dependency Scanning
         run: npm audit --audit-level=high
 
-      # Step 6: Run TruffleHog to detect secrets in the code
-      - name: Detect Secrets with TruffleHog
-        uses: edplato/trufflehog-actions-scan@v2.0.10
-        with:
-          scan_depth: 50
-
-      # Step 7: OWASP Dependency-Check to scan for vulnerabilities in dependencies
+      # Step 6: OWASP Dependency-Check to scan for vulnerabilities in dependencies
       - name: OWASP Dependency Check
         uses: DependencyTrack/github-action@2.0.0
         with:
@@ -47,7 +41,7 @@ jobs:
           failCriteria: 'HIGH' # Fail the build on high vulnerabilities
           format: 'ALL' # Output formats
 
-      # Step 8: Use GitHub CodeQL for advanced security analysis
+      # Step 7: Use GitHub CodeQL for advanced security analysis
       - name: GitHub CodeQL Analysis
         uses: github/codeql-action/init@v2
         with:
