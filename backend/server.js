@@ -8,11 +8,11 @@ const userRoutes = require ('./routes/userRouter')
 const paymentRoutes = require ('./routes/paymentRouter')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken');
-
+const fs = require('fs');
+const https = require('https'); // Import the https module
 const app = express();
 
 // Middleware
-
 app.use(cors({
     origin: 'http://localhost:3000', // Replace with your frontend's URL
     credentials: true // Allow cookies to be sent
@@ -44,8 +44,16 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
+const options = {
+    key: fs.readFileSync('certificates\\server.key'), // Path to your private key
+    cert: fs.readFileSync('certificates\\server.crt'), // Path to your self-signed certificate
+};
+
+// Create HTTPS server
+const server = https.createServer(options, app);
+
 // Start the server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

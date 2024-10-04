@@ -30,8 +30,9 @@ const Registration = () => {
     setIsLoading(true); // Set loading state
 
     try {
-      const response = await axios.post('http://localhost:5000/api/users/signup', formData);
-      
+      const response = await axios.post('https://localhost:5000/api/users/signup', formData);
+
+      // If successful, redirect to home page
       setSuccess('User registered successfully!');
       setError(null);
       navigate('/'); // Redirect to home page
