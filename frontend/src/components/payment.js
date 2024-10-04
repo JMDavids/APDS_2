@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { usePaymentContext } from '../hooks/usepaymentContext';
+import { TextField, Button, Typography, Container, CircularProgress, Snackbar } from '@mui/material';
 
 const Payment = () => {
   const { dispatch } = usePaymentContext();
@@ -9,9 +10,11 @@ const Payment = () => {
   const [accountInfo, setAccountInfo] = useState('');
   const [swiftCode, setSwiftCode] = useState('');
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the form from refreshing on submit
+    setIsLoading(true); // Set loading state
 
     const payment = { amount, currency, provider, accountInfo, swiftCode };
 
@@ -20,6 +23,7 @@ const Payment = () => {
 
     if (!token) {
       setError('User is not authenticated');
+      setIsLoading(false);
       return;
     }
 
@@ -33,6 +37,7 @@ const Payment = () => {
     });
 
     const json = await response.json();
+    setIsLoading(false); // Reset loading state
 
     if (!response.ok) {
       setError(json.error);
@@ -51,53 +56,69 @@ const Payment = () => {
   };
 
   return (
-    <form className="create" onSubmit={handleSubmit}>
-      <h3>Add new Payment</h3>
-
-      <label>Payment Amount:</label>
-      <input
-        type="number"
-        onChange={(e) => setAmount(e.target.value)}
-        value={amount}
-        required
-      />
-
-      <label>Currency Type:</label>
-      <input
-        type="text"
-        onChange={(e) => setCurrency(e.target.value)}
-        value={currency}
-        required
-      />
-
-      <label>Payment Provider:</label>
-      <input
-        type="text"
-        onChange={(e) => setProvider(e.target.value)}
-        value={provider}
-        required
-      />
-
-      <label>Account Info:</label>
-      <input
-        type="text"
-        onChange={(e) => setAccountInfo(e.target.value)}
-        value={accountInfo}
-        required
-      />
-
-      <label>Swift Code:</label>
-      <input
-        type="text"
-        onChange={(e) => setSwiftCode(e.target.value)}
-        value={swiftCode}
-        required
-      />
-
-      <button type="submit">Add Payment</button>
-
-      {error && <div className="error">{error}</div>}
-    </form>
+    <Container component="main" maxWidth="xs">
+      <Typography variant="h5" align="center">Add New Payment</Typography>
+      <form className="create" onSubmit={handleSubmit}>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          label="Payment Amount"
+          type="number"
+          onChange={(e) => setAmount(e.target.value)}
+          value={amount}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          label="Currency Type"
+          onChange={(e) => setCurrency(e.target.value)}
+          value={currency}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          label="Payment Provider"
+          onChange={(e) => setProvider(e.target.value)}
+          value={provider}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          label="Account Info"
+          onChange={(e) => setAccountInfo(e.target.value)}
+          value={accountInfo}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          label="Swift Code"
+          onChange={(e) => setSwiftCode(e.target.value)}
+          value={swiftCode}
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          disabled={isLoading}
+          style={{ position: 'relative' }}
+        >
+          {isLoading && <CircularProgress size={24} style={{ position: 'absolute' }} />}
+          Add Payment
+        </Button>
+      </form>
+      {error && <Snackbar open={Boolean(error)} message={error} onClose={() => setError(null)} autoHideDuration={6000} />}
+    </Container>
   );
 };
 

@@ -7,7 +7,12 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     fullName: {
         type: String,
-        required: true
+        required: true,
+        maxlength: 100, //prevent buffer overflow attacks or input that is too large.
+        validate: {
+            validator: (v) => /^[a-zA-Z\s]+$/.test(v),
+            message: props => `${props.value} is not a valid full name!`
+        }
     },
 
     email: {
@@ -70,6 +75,12 @@ userSchema.statics.signup = async function (fullName, email, idNumber, accountNu
         throw Error('All fields must be filled');
     }
 
+    //RegEx for Full Name
+    if (!/^[a-zA-Z\s]+$/.test(fullName)) {
+        throw Error('Invalid full name');
+    }
+    
+
     // Validate email
     if (!validator.isEmail(email)) {
         throw Error('Email invalid');
@@ -115,9 +126,9 @@ userSchema.statics.signup = async function (fullName, email, idNumber, accountNu
 };
 
 // Adding the login function
-userSchema.statics.login = async function (email, password) {
+userSchema.statics.login = async function (email, password, accountNumber) {
     // Validate if fields are actually filled
-    if (!email || !password) {
+    if (!email || !password || !accountNumber) {
         throw Error('All fields must be filled');
     }
 
@@ -126,6 +137,12 @@ userSchema.statics.login = async function (email, password) {
     // Validate email
     if (!user) {
         throw Error('Incorrect email or password');
+    }
+
+    const accountMatch = await bcrypt.compare(accountNumber, user.accountNumber);
+
+    if (!accountMatch) {
+        throw Error('Incorrect account number');
     }
 
     // Compare password

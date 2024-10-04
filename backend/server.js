@@ -3,6 +3,7 @@ require('dotenv').config()
 
 const express = require('express')
 const cors = require('cors'); // Import cors
+const helmet = require('helmet');
 const userRoutes = require ('./routes/userRouter')
 const paymentRoutes = require ('./routes/paymentRouter')
 const mongoose = require('mongoose')
@@ -15,6 +16,18 @@ const app = express();
 app.use(cors({
     origin: 'http://localhost:3000', // Replace with your frontend's URL
     credentials: true // Allow cookies to be sent
+}));
+
+app.use(helmet());
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"], // Only allow resources from the same origin
+        scriptSrc: ["'self'"], // Allow scripts from the same origin
+        styleSrc: ["'self'"], // Allow styles from the same origin
+        imgSrc: ["'self'", "data:"] // Allow images from the same origin and data URIs
+        // Add other directives as needed, such as font-src, connect-src, etc.
+    },
+    reportOnly: false, // Set to true to enable report-only mode for testing
 }));
 
 app.use(express.json());

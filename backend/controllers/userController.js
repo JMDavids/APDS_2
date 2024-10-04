@@ -10,9 +10,9 @@ const createToken = (id) => {
 
 // Login user
 const loginUser = async (req, res) => {
-    const { email, password } = req.body; // Removed accountNumber, as it's not used in the login logic
+    const { email, password, accountNumber } = req.body;
     try {
-        const user = await User.login(email, password); // Updated to match the model function signature
+        const user = await User.login(email, password, accountNumber);
 
         // Create and store token in a cookie
         const token = createToken(user.id);

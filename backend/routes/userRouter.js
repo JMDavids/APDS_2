@@ -23,7 +23,7 @@ router.post('/login', bruteForce.prevent, loginUser);
 
 // Add rate limiting to the signup route to avoid abuse
 const signupRateLimiter = new ExpressBrute(store, {
-    freeRetries: 3, // Fewer retries for signup attempts
+    freeRetries: 10, // Fewer retries for signup attempts
     minWait: 1000 * 60 * 5, // 5min wait after 3 failed attempts
     maxWait: 1000 * 60 * 60, // 1-hour max wait time after repeated attempts
     lifetime: 1000 * 60 * 60 // 1-hour lifetime for failed attempts
