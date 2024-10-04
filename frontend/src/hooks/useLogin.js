@@ -5,9 +5,9 @@ import { useAuthenticationContext } from './useAuthenticationContext'; // Assumi
 export const useLogin = () => {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const { dispatch } = useAuthenticationContext(); // To update user state in the context
+    const { dispatch } = useAuthenticationContext();
 
-    const login = async (email, password, accountNumber) => {
+    const login = async (email, password) => {
         setIsLoading(true);
         setError(null);
 
@@ -15,8 +15,8 @@ export const useLogin = () => {
             const response = await fetch('http://localhost:5000/api/users/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, accountNumber }),
-                credentials: 'include'
+                body: JSON.stringify({ email, password }),
+                credentials: 'include' // Include cookies in the request
             });
 
             const data = await response.json();
@@ -24,6 +24,7 @@ export const useLogin = () => {
             if (!response.ok) {
                 setError(data.error);
                 setIsLoading(false);
+                return false; // Return false on failure
             } else {
                 // Store JWT token in localStorage
                 localStorage.setItem('user', JSON.stringify(data));
@@ -32,10 +33,12 @@ export const useLogin = () => {
                 dispatch({ type: 'LOGIN', payload: data });
 
                 setIsLoading(false);
+                return true; // Return true on success
             }
         } catch (err) {
             setError('Failed to login');
             setIsLoading(false);
+            return false; // Return false on exception
         }
     };
 
