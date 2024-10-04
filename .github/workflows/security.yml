@@ -34,12 +34,13 @@ jobs:
         run: npm audit --audit-level=high
 
       # Step 6: OWASP Dependency-Check to scan for vulnerabilities in dependencies
-      - name: OWASP Dependency Check
-        uses: DependencyTrack/github-action@2.0.0
+      - name: OWASP Dependency-Check
+        uses: OWASP/dependency-check-action@v3.0.2
         with:
-          projectName: "MyProject" # Customize project name
-          failCriteria: 'HIGH' # Fail the build on high vulnerabilities
-          format: 'ALL' # Output formats
+          project: 'MyProject'
+          scan: './' # Path to scan, adjust if necessary
+          format: 'ALL'
+          failOnCVSS: '7' # Fail build on CVSS score >= 7 (High-severity vulnerabilities)
 
       # Step 7: Use GitHub CodeQL for advanced security analysis
       - name: GitHub CodeQL Analysis
