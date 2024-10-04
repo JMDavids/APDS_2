@@ -1,21 +1,26 @@
 const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
-    const authHeader = req.headers.authorization;
+  // Check for token in both headers and cookies
+  let token = req.headers.authorization || req.cookies.token;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ error: 'Authentication token missing or invalid' });
-    }
+  if (!token) {
+    return res.status(401).json({ error: 'Authentication token missing' });
+  }
 
-    const token = authHeader.split(' ')[1];
+  // Remove 'Bearer ' prefix if present
+  if (token.startsWith('Bearer ')) {
+    token = token.split(' ')[1];
+  }
 
-    try {
-        const decoded = jwt.verify(token, process.env.SECRET_KEY); // Use your JWT secret key
-        req.user = decoded; // Attach the user object (or just the user ID) to the request
-        next();
-    } catch (error) {
-        return res.status(401).json({ error: 'Token is not valid' });
-    }
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    console.error('Token verification error:', error);
+    return res.status(401).json({ error: 'Invalid token' });
+  }
 };
 
 module.exports = authMiddleware;

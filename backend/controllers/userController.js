@@ -23,7 +23,7 @@ const loginUser = async (req, res) => {
             sameSite: 'Lax'
         });
 
-        res.status(200).json({ email });
+        res.status(200).json({ email, token });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

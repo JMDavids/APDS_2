@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useAuthenticationContext } from './useAuthenticationContext'; // Assuming you have this context for managing user state
 
+
 export const useLogin = () => {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const { dispatch } = useAuthenticationContext(); // To update user state in the context
 
-    const login = async (email, password) => {
+    const login = async (email, password, accountNumber) => {
         setIsLoading(true);
         setError(null);
 
@@ -14,7 +15,8 @@ export const useLogin = () => {
             const response = await fetch('http://localhost:5000/api/users/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password, accountNumber }),
+                credentials: 'include'
             });
 
             const data = await response.json();

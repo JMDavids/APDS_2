@@ -2,6 +2,7 @@
 require('dotenv').config()
 
 const express = require('express')
+const cors = require('cors'); // Import cors
 const userRoutes = require ('./routes/userRouter')
 const paymentRoutes = require ('./routes/paymentRouter')
 const mongoose = require('mongoose')
@@ -10,9 +11,13 @@ const jwt = require('jsonwebtoken');
 const app = express();
 
 // Middleware
+
+app.use(cors({
+    origin: 'http://localhost:3000', // Replace with your frontend's URL
+    credentials: true // Allow cookies to be sent
+}));
+
 app.use(express.json());
-const cors = require('cors');
-app.use(cors());
 app.use('/api/users', userRoutes)
 app.use('/api/payments', paymentRoutes)
 

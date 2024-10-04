@@ -15,7 +15,7 @@ const Login = () => {
 
         // Redirect to home page if login is successful
         if (success) {
-            navigate('/');
+            navigate('/payment');
         }
     };
 
