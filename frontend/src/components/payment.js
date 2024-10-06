@@ -27,7 +27,7 @@ const Payment = () => {
       return;
     }
 
-    const response = await fetch('https//localhost:5000/api/payments', {
+    const response = await fetch('https://localhost:5000/api/payments', {
       method: 'POST',
       body: JSON.stringify(payment), // Converting payment object to JSON
       headers: {
