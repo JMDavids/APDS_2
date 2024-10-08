@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/login';
 import Navbar from './components/navbar';
-import Registration from './components/RegisterForm';  // Assuming your registration form is here
-import Payment from './components/payment';            // Assuming your payment form is here
+import Registration from './components/RegisterForm'; 
+import Payment from './components/payment';            
 
 function App() {
   return (

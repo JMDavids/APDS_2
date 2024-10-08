@@ -17,7 +17,7 @@ const getPayments = async (req, res) => {
 // Get a specific payment by ID for the logged-in user
 const getPayment = async (req, res) => {
     const { id } = req.params;
-    const userId = req.user._id; // Assuming the user ID is attached to the request
+    const userId = req.user._id; //  the user ID is attached to the request
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ error: 'Invalid payment ID' });

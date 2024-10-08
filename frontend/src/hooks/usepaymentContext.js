@@ -11,5 +11,3 @@ export const usePaymentContext = () => {
     return context;
 };
 
-//EVERY TIME WE WANT TO USE ANY BOOK DATA, WE CAN JUST INVOKE THIS HOOK
-//IT WILL UPDATE OUR GLOBAL CONTEXT, INSTEAD OF A LOCAL STATE
