@@ -16,6 +16,9 @@ const empSchema = new Schema({
     },
 }, { timestamps: true });
 
+
+
+
 // Function to handle login
 empSchema.statics.login = async function (empID, password) {
     console.log(`Login attempt with empID: ${empID} and password: ${password}`);  // Log the login attempt

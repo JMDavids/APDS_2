@@ -20,7 +20,7 @@ const bruteForce = new ExpressBrute(store, {
 });
 
 // Protect the login route with brute-force protection to prevent attacks
-router.post('/login',  loginEmployee);
+router.post('/login',bruteForce.prevent,  loginEmployee);
 
 
 
