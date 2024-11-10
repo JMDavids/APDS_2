@@ -31,6 +31,9 @@ const Navbar = () => {
                             <Link to='/register'>
                                 <h3>Register</h3>
                             </Link>
+                            <Link to='/employee'>
+                                <h3>Employees</h3>
+                            </Link>
                         </div>
                     )}
                 </nav>

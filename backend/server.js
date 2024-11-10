@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const https = require('https') // Import the https module
 const app = express()
-
+const employeeRoutes = require('./routes/employeeRoutes')
 // Middleware
 app.use(
   cors({
@@ -37,7 +37,11 @@ app.use(
 app.use(express.json())
 app.use('/api/users', userRoutes)
 app.use('/api/payments', paymentRoutes)
-
+app.use('/api/employee',employeeRoutes)
+app.use((err, req, res, next) => {
+  console.error(err.stack);  // Log the stack trace
+  res.status(500).json({ error: 'Something went wrong!' });
+});
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, {

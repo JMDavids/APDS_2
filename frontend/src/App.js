@@ -4,6 +4,7 @@ import Navbar from './components/navbar';
 import Registration from './components/RegisterForm'; 
 import Payment from './components/payment';            
 
+import EmployeeLoginPage from './pages/employee';
 function App() {
   return (
     <div className="App">
@@ -21,6 +22,8 @@ function App() {
 
             {/* Route to payment page */}
             <Route path='/payment' element={<Payment />} />
+
+            <Route path="/employee" element={<EmployeeLoginPage/>} /> {/* Define employee login route */}
           </Routes>
         </div>
       </BrowserRouter>
