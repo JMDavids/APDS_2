@@ -77,16 +77,14 @@ const createPayment = async (req, res) => {
         const userId = user._id;
 
         const salt = await bcrypt.genSalt(10);
-        const hashedAccountInfo = await bcrypt.hash(accountInfo, salt);
-        const hashedSwiftCode = await bcrypt.hash(swiftCode, salt);
 
         // Add the new payment to the database
         const payment = await Payment.create({
             amount,
             currency,
             provider,
-            accountInfo: hashedAccountInfo,
-            swiftCode: hashedSwiftCode,
+            accountInfo,
+            swiftCode,
             userId, // Associate payment with the user
         });
 

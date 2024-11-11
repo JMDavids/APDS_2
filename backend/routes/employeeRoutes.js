@@ -96,12 +96,37 @@ router.get('/payments', async (req, res) => {
     try {
         jwt.verify(token, process.env.SECRET_KEY);
 
-        const payments = await Payment.find({});
+        const payments = await Payment.find({}).populate('userId', 'fullName username accountNumber');
         res.json(payments);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
+
+router.get('/user/:accountNumber', async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+  
+    if (!token) {
+      console.log('No token provided');
+      return res.status(401).json({ error: 'Unauthorized access' });
+    }
+  
+    try {
+      jwt.verify(token, process.env.SECRET_KEY);
+  
+      const { accountNumber } = req.params;
+      const user = await User.findOne({ accountNumber });
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      res.json(user);
+    } catch (error) {
+      console.error('Error fetching user by account number:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
 
 // ... existing routes ...
 

@@ -122,12 +122,11 @@ userSchema.statics.signup = async function (fullName, email, idNumber, accountNu
     // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
-    const hashedAccountNumber = await bcrypt.hash(accountNumber, salt);
     const hashedIdNumber = await bcrypt.hash(idNumber, salt);
 
 
     // Create the new user
-    const user = await this.create({ fullName, email, idNumber: hashedIdNumber, accountNumber: hashedAccountNumber, password: hash });
+    const user = await this.create({ fullName, email, idNumber: hashedIdNumber, accountNumber, password: hash });
 
     return user;
 };
@@ -146,8 +145,7 @@ userSchema.statics.login = async function (email, password, accountNumber) {
         throw Error('Incorrect email or password');
     }
 
-    const accountMatch = await bcrypt.compare(accountNumber, user.accountNumber);
-
+    const accountMatch = await this.findOne({accountNumber});
     if (!accountMatch) {
         throw Error('Incorrect account number');
     }
