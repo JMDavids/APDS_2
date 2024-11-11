@@ -1,12 +1,12 @@
-import { useAuthenticationContext } from "./EMPContextProvider"; // Correct path to your context hook
+import { useAuthenticationContext } from "./EMPContextProvider";
 
 export const useLogout = () => {
-    const { dispatch } = useAuthenticationContext(); // Use the hook to get the context
+    const { dispatch } = useAuthenticationContext();
 
     const logout = () => {
-        localStorage.removeItem('employee'); // Remove employee data from localStorage
-        dispatch({ type: "LOGOUT" }); // Dispatch the "LOGOUT" action
+        localStorage.removeItem('employee');
+        dispatch({ type: "LOGOUT" });
     };
 
-    return { logout }; // Return the logout function
+    return { logout };
 };

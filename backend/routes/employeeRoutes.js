@@ -22,7 +22,7 @@ const bruteForce = new ExpressBrute(store, {
 // Login route with brute-force protection
 router.post('/login', bruteForce.prevent, loginEmployee);
 
-// Get all customers without middleware
+// Get all customers
 router.get('/customers', async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
 
@@ -39,7 +39,7 @@ router.get('/customers', async (req, res) => {
     }
 });
 
-// Get payments for a specific customer without middleware
+// Get payments for a specific customer
 router.get('/customers/:userId/payments', async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
   
@@ -62,7 +62,7 @@ router.get('/customers/:userId/payments', async (req, res) => {
     }
   });
 
-// Verify a payment without middleware
+// Verify a payment
 router.post('/verify-payment/:paymentId', async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
 
@@ -85,7 +85,7 @@ router.post('/verify-payment/:paymentId', async (req, res) => {
 });
 
 
-// Get all payments without middleware
+// Get all payments
 router.get('/payments', async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
 
@@ -127,7 +127,5 @@ router.get('/user/:accountNumber', async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
-
-// ... existing routes ...
 
 module.exports = router;

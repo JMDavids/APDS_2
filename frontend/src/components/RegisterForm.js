@@ -13,7 +13,7 @@ const Registration = () => {
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ const Registration = () => {
  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Set loading state
+    setIsLoading(true);
 
     try {
       const response = await fetch('https://localhost:5000/api/users/signup', {
@@ -44,7 +44,7 @@ const Registration = () => {
         // If successful, redirect to home page
         setSuccess('User registered successfully!');
         setError(null);
-        navigate('/'); // Redirect to home page
+        navigate('/');
       } else {
         setError(data.error || 'Something went wrong');
         setSuccess(null);
@@ -53,7 +53,7 @@ const Registration = () => {
       setError('Something went wrong');
       setSuccess(null);
     } finally {
-      setIsLoading(false); // Reset loading state
+      setIsLoading(false);
     }
   };
   return (

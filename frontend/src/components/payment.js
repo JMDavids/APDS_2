@@ -10,11 +10,11 @@ const Payment = () => {
   const [accountInfo, setAccountInfo] = useState('');
   const [swiftCode, setSwiftCode] = useState('');
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the form from refreshing on submit
-    setIsLoading(true); // Set loading state
+    e.preventDefault();
+    setIsLoading(true);
 
     const payment = { amount, currency, provider, accountInfo, swiftCode };
 
@@ -29,15 +29,15 @@ const Payment = () => {
 
     const response = await fetch('https://localhost:5000/api/payments', {
       method: 'POST',
-      body: JSON.stringify(payment), // Converting payment object to JSON
+      body: JSON.stringify(payment),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`, // Attach the JWT token
+        'Authorization': `Bearer ${token}`,
       },
     });
 
     const json = await response.json();
-    setIsLoading(false); // Reset loading state
+    setIsLoading(false);
 
     if (!response.ok) {
       setError(json.error);

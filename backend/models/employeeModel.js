@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');  // Use bcryptjs for hashing and comparing passwords
+const bcrypt = require('bcrypt');
 const validator = require('validator');
 require('dotenv').config();
 
@@ -21,23 +21,22 @@ const empSchema = new Schema({
 
 // Function to handle login
 empSchema.statics.login = async function (empID, password) {
-    console.log(`Login attempt with empID: ${empID} and password: ${password}`);  // Log the login attempt
+    console.log(`Login attempt with empID: ${empID} and password: ${password}`);
 
     const emp = await this.findOne({ empID });
-    console.log('Employee found:', emp);  // Log the found employee object (make sure empID is correct)
+    console.log('Employee found:', emp);
 
     if (!emp) {
         console.log('Employee not found');
         throw Error('Incorrect employee ID or password');
     }
 
-    // Directly compare the plain-text password with the stored one
     if (emp.password !== password) {
         console.log('Password does not match!');
         throw Error('Incorrect employee ID or password');
     }
 
-    console.log(`Password match successful for empID: ${empID}`);  // Log password match success
+    console.log(`Password match successful for empID: ${empID}`);
 
     return emp;
 };

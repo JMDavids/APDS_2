@@ -1,22 +1,21 @@
-// backend/server.js
 require('dotenv').config()
 
 const express = require('express')
-const cors = require('cors') // Import cors
+const cors = require('cors')
 const helmet = require('helmet')
 const userRoutes = require('./routes/userRouter')
 const paymentRoutes = require('./routes/paymentRouter')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
-const https = require('https') // Import the https module
+const https = require('https')
 const app = express()
 const employeeRoutes = require('./routes/employeeRoutes')
 // Middleware
 app.use(
   cors({
     origin: ['http://localhost:3000', 'https://localhost:3000'], //
-    credentials: true, // Allow cookies to be sent
+    credentials: true,
   })
 )
 
@@ -33,9 +32,8 @@ app.use(
       scriptSrc: ["'self'"], // Allow scripts from the same origin
       styleSrc: ["'self'"], // Allow styles from the same origin
       imgSrc: ["'self'", 'data:'], // Allow images from the same origin and data URIs
-      // Add other directives as needed, such as font-src, connect-src, etc.
     },
-    reportOnly: false, // Set to true to enable report-only mode for testing
+    reportOnly: false,
   })
 )
 
@@ -62,8 +60,8 @@ app.get('/', (req, res) => {
 })
 
 const options = {
-  key: fs.readFileSync('certificates\\d.key'), // Path to your private key
-  cert: fs.readFileSync('certificates\\s.crt'), // Path to your self-signed certificate
+  key: fs.readFileSync('certificates\\d.key'),
+  cert: fs.readFileSync('certificates\\s.crt'),
 }
 
 // Create HTTPS server

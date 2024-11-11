@@ -6,12 +6,12 @@ export const authReducer = (state, action) => {
     switch (action.type) {
         case 'LOGIN':
             return {
-                ...state, // Spread the existing state
+                ...state,
                 employee: action.payload
             };
         case 'LOGOUT':
             return {
-                ...state, // Keep other properties in state if necessary
+                ...state,
                 employee: null
             };
         default:
@@ -19,9 +19,8 @@ export const authReducer = (state, action) => {
     }
 }
 
-// The initial state should contain an 'employee' property, not 'user'
 export const EMPContextProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(authReducer, { employee: null }); // Set initial state to have 'employee'
+    const [state, dispatch] = useReducer(authReducer, { employee: null });
 
     console.log("AuthContext state: ", state);
 

@@ -1,4 +1,3 @@
-// App.js
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/login';
 import Navbar from './components/navbar';
@@ -11,7 +10,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Navbar /> {/* Navbar will remain visible across all routes */}
+        <Navbar />
         <div className='pages'>
           <Routes>
             {/* Route to login page */}

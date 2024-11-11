@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-//creating the schema
 const paymentSchema = new Schema({
     amount:{
         type: Number,
@@ -37,6 +36,4 @@ const paymentSchema = new Schema({
     },
 }, {timestamps: true})
 
-
-//create the model "payment"
 module.exports = mongoose.model('Payment', paymentSchema)

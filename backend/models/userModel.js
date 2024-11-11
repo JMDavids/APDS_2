@@ -8,7 +8,7 @@ const userSchema = new Schema({
     fullName: {
         type: String,
         required: true,
-        maxlength: 100, //prevent buffer overflow attacks or input that is too large.
+        maxlength: 100,
         validate: {
             validator: (v) => /^[a-zA-Z\s]+$/.test(v),
             message: props => `${props.value} is not a valid full name!`
@@ -77,7 +77,7 @@ function validateSAID(idNumber) {
 
 // Adding the signup function
 userSchema.statics.signup = async function (fullName, email, idNumber, accountNumber, password) {
-    // Validate if fields are actually filled
+    // Validate if fields are filled
     if (!fullName || !email || !password || !idNumber || !accountNumber) {
         throw Error('All fields must be filled');
     }

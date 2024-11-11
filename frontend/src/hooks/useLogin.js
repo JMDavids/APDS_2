@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useAuthenticationContext } from './useAuthenticationContext'; // Assuming you have this context for managing user state
-
+import { useAuthenticationContext } from './useAuthenticationContext';
 export const useLogin = () => {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -14,8 +13,8 @@ export const useLogin = () => {
             const response = await fetch('https://localhost:5000/api/users/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, accountNumber }), // Include account number
-                credentials: 'include' // Include cookies in the request
+                body: JSON.stringify({ email, password, accountNumber }),
+                credentials: 'include'
             });
 
             const data = await response.json();
@@ -23,7 +22,7 @@ export const useLogin = () => {
             if (!response.ok) {
                 setError(data.error);
                 setIsLoading(false);
-                return false; // Return false on failure
+                return false;
             } else {
                 // Store JWT token in localStorage
                 localStorage.setItem('user', JSON.stringify(data));
@@ -32,12 +31,12 @@ export const useLogin = () => {
                 dispatch({ type: 'LOGIN', payload: data });
 
                 setIsLoading(false);
-                return true; // Return true on success
+                return true;
             }
         } catch (err) {
             setError('Failed to login');
             setIsLoading(false);
-            return false; // Return false on exception
+            return false;
         }
     };
 

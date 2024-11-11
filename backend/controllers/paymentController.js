@@ -85,7 +85,7 @@ const createPayment = async (req, res) => {
             provider,
             accountInfo,
             swiftCode,
-            userId, // Associate payment with the user
+            userId,
         });
 
         res.status(200).json(payment);

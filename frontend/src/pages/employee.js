@@ -8,13 +8,13 @@ const EmployeeLoginPage = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [employee, setEmployee] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);  // Add isLoading state
+    const [isLoading, setIsLoading] = useState(false); 
 
-    const navigate = useNavigate();  // Initialize useNavigate hook
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);  // Set loading to true before the request
+        setIsLoading(true);
         try {
             const response = await fetch('https://localhost:5000/api/employee/login', {
                 method: 'POST',
@@ -26,9 +26,8 @@ const EmployeeLoginPage = () => {
             if (response.ok) {
                 setEmployee(data.employee);
                 setIsAuthenticated(true);
-                setErrorMessage(''); // Clear error if successful
-                // Redirect to the dashboard (or another page) after successful login
-                navigate('/dashboard');  // Redirect to your desired page
+                setErrorMessage('');
+                navigate('/dashboard');
             } else {
                 setErrorMessage(data.message || 'Login failed');
             }
@@ -36,7 +35,7 @@ const EmployeeLoginPage = () => {
             console.error('Login error:', error);
             setErrorMessage('An error occurred during login');
         } finally {
-            setIsLoading(false);  // Set loading to false after the request completes
+            setIsLoading(false);
         }
     };
 
@@ -44,7 +43,6 @@ const EmployeeLoginPage = () => {
         return (
             <div>
                 <p>Welcome, {employee?.empID}</p>
-                {/* Optionally, show a message or loader while redirecting */}
             </div>
         );
     }

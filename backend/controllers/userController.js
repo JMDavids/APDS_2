@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const RateLimit = require('express-rate-limit');
 
-// Function to create a JWT token
 const createToken = (id) => {
     return jwt.sign({ id }, process.env.SECRET_KEY, { expiresIn: '3d' });
 }
@@ -35,7 +34,7 @@ const logoutUser = async (req, res) => {
         res.cookie('token', '', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            expires: new Date(0) // Expire the token immediately
+            expires: new Date(0) 
         });
         res.status(200).json({ message: 'Logged out successfully' });
     } catch (error) {
@@ -47,7 +46,7 @@ const logoutUser = async (req, res) => {
 const signupUser = async (req, res) => {
     const { fullName, email, accountNumber, idNumber, password } = req.body;
     try {
-        const user = await User.signup(fullName, email, idNumber, accountNumber, password); // Parameter order fixed
+        const user = await User.signup(fullName, email, idNumber, accountNumber, password);
 
         // Add token to track session
         const token = createToken(user.id);

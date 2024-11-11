@@ -1,10 +1,9 @@
-const Employee = require('../models/employeeModel'); // Correct path to your model
+const Employee = require('../models/employeeModel');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const validator = require('validator');  // Import validator package
+const validator = require('validator');
 dotenv.config();
 
-// Create JWT token for the employee
 const createToken = (id) => {
     return jwt.sign({ id }, process.env.SECRET_KEY, { expiresIn: '3d' });
 };
@@ -17,7 +16,6 @@ const loginEmployee = async (req, res) => {
         return res.status(400).json({ error: 'Employee ID and password are required' });
     }
 
-    // Validate empID format (must start with 'emp' followed by exactly 5 digits)
     if (!validator.matches(empID, /^emp\d{5}$/)) {
         return res.status(400).json({
             error: 'Invalid Employee ID format. It should be in the format "empXXXXX" where XXXXX is exactly 5 digits.'
@@ -31,13 +29,12 @@ const loginEmployee = async (req, res) => {
     try {
         // First compare the provided credentials with environment variables
         if (empID === empIDFromEnv && password === empPassFromEnv) {
-            // If they match, generate a token
-            const token = createToken(empID);  // You can use empID to generate the token
+            const token = createToken(empID);
             return res.status(200).json({ empID, token });
         }
 
         // If credentials don't match the environment variables, check MongoDB
-        const employee = await Employee.login(empID, password); // Assuming you have a login function in your model
+        const employee = await Employee.login(empID, password);
         
         // If employee found and credentials are valid, generate a token
         const token = createToken(employee._id);
@@ -46,7 +43,7 @@ const loginEmployee = async (req, res) => {
         res.status(200).json({ empID: employee.empID, token });
         
     } catch (error) {
-        console.error('Login failed:', error.message);  // Log the error for debugging
+        console.error('Login failed:', error.message);
         res.status(400).json({ error: error.message });
     }
 };

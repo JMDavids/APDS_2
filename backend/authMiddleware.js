@@ -8,7 +8,6 @@ const authMiddleware = (req, res, next) => {
     return res.status(401).json({ error: 'Authentication token missing' });
   }
 
-  // Remove 'Bearer ' prefix if present
   if (token.startsWith('Bearer ')) {
     token = token.split(' ')[1];
   }

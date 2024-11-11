@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import {
+  Container,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  Grid,
+  Snackbar,
+  Alert,
+} from '@mui/material';
 
 const EmployeeDashboard = () => {
   const [payments, setPayments] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [userDetails, setUserDetails] = useState(null); // Holds the user details or null
-  const [userError, setUserError] = useState(''); // Error message if user not found
+  const [userDetails, setUserDetails] = useState(null);
+  const [userError, setUserError] = useState('');
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -13,7 +25,7 @@ const EmployeeDashboard = () => {
         const token = localStorage.getItem('employeeToken');
         const response = await fetch('https://localhost:5000/api/employee/payments', {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
@@ -41,7 +53,7 @@ const EmployeeDashboard = () => {
       const response = await fetch(`https://localhost:5000/api/employee/verify-payment/${paymentId}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
@@ -54,16 +66,13 @@ const EmployeeDashboard = () => {
 
       const data = await response.json();
 
-      // Update the payment's verified status in the state
       setPayments((prevPayments) =>
         prevPayments.map((payment) =>
           payment._id === paymentId ? { ...payment, verified: true } : payment
         )
       );
 
-      // Display a success message
       setSuccessMessage('Payment verified successfully');
-      // Hide the message after a few seconds
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
       console.error('Error verifying payment:', error);
@@ -71,20 +80,16 @@ const EmployeeDashboard = () => {
     }
   };
 
-  if (errorMessage) {
-    return <p style={{ color: 'red' }}>{errorMessage}</p>;
-  }
-
   const viewUser = async (accountNumber) => {
-    setUserDetails(null); // Reset previous user details
-    setUserError(''); // Reset previous error message
+    setUserDetails(null);
+    setUserError('');
 
     try {
       const token = localStorage.getItem('employeeToken');
 
       const response = await fetch(`https://localhost:5000/api/employee/user/${accountNumber}`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
@@ -96,60 +101,104 @@ const EmployeeDashboard = () => {
       }
 
       const data = await response.json();
-      setUserDetails(data); // Set the fetched user details
+      setUserDetails(data);
     } catch (error) {
       console.error('Error fetching user details:', error);
       setUserError('An error occurred while fetching user details');
     }
   };
 
-  if (errorMessage) {
-    return <p style={{ color: 'red' }}>{errorMessage}</p>;
-  }
-
-
   return (
-    <div>
-      <h2>All Payments</h2>
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+    <Container maxWidth="lg" style={{ paddingTop: '20px' }}>
+      <Typography variant="h4" align="center" gutterBottom>
+        Employee Dashboard - All Payments
+      </Typography>
+
+      {successMessage && (
+        <Snackbar
+          open={!!successMessage}
+          autoHideDuration={3000}
+          onClose={() => setSuccessMessage('')}
+        >
+          <Alert severity="success" onClose={() => setSuccessMessage('')}>
+            {successMessage}
+          </Alert>
+        </Snackbar>
+      )}
+
+      {errorMessage && (
+        <Snackbar open={!!errorMessage} autoHideDuration={3000} onClose={() => setErrorMessage('')}>
+          <Alert severity="error" onClose={() => setErrorMessage('')}>
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+      )}
+
       {payments.length === 0 ? (
-        <p>No payments found.</p>
+        <Typography align="center" color="textSecondary">
+          No payments found.
+        </Typography>
       ) : (
-        payments.map((payment) => (
-          <div key={payment._id}>
-            <p>Amount: {payment.amount}</p>
-            <p>Currency: {payment.currency}</p>
-            <p>Provider: {payment.provider}</p>
-            <p>SWIFT Code: {payment.swiftCode}</p>
-            <p>Account Info (Payee): {payment.accountInfo}</p>
-            <button onClick={() => viewUser(payment.accountInfo)}>View Payee</button>
-
-            {/* Display Payer's Details */}
-            <h3>Payer Details</h3>
-            <p>Full Name: {payment.userId.fullName}</p>
-            <p>Username: {payment.userId.username}</p>
-            <p>Account Number: {payment.userId.accountNumber}</p>
-
-            <p>Verified: {payment.verified ? 'Yes' : 'No'}</p>
-            {!payment.verified && (
-              <button onClick={() => verifyPayment(payment._id)}>Verify Payment</button>
-            )}
-            <hr />
-          </div>
-        ))
+        <Grid container spacing={3}>
+          {payments.map((payment) => (
+            <Grid item xs={12} sm={6} md={4} key={payment._id}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    Payment Details
+                  </Typography>
+                  <Typography variant="body2">Amount: {payment.amount}</Typography>
+                  <Typography variant="body2">Currency: {payment.currency}</Typography>
+                  <Typography variant="body2">Provider: {payment.provider}</Typography>
+                  <Typography variant="body2">SWIFT Code: {payment.swiftCode}</Typography>
+                  <Typography variant="body2">
+                    Verified: {payment.verified ? 'Yes' : 'No'}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => viewUser(payment.accountInfo)}
+                  >
+                    View Payee
+                  </Button>
+                  {!payment.verified && (
+                    <Button
+                      variant="contained"
+                      size="small"
+                      color="primary"
+                      onClick={() => verifyPayment(payment._id)}
+                    >
+                      Verify Payment
+                    </Button>
+                  )}
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       )}
-      {/* Display Payee Details or Error */}
-      {userError && <p style={{ color: 'red' }}>{userError}</p>}
+
+      {userError && (
+        <Snackbar open={!!userError} autoHideDuration={3000} onClose={() => setUserError('')}>
+          <Alert severity="error" onClose={() => setUserError('')}>
+            {userError}
+          </Alert>
+        </Snackbar>
+      )}
+
       {userDetails && (
-        <div>
-          <h3>Payee Details</h3>
-          <p>Full Name: {userDetails.fullName}</p>
-          <p>Email: {userDetails.email}</p>
-          <p>Account Number: {userDetails.accountNumber}</p>
-          <p>ID Number: {userDetails.idNumber}</p>
-        </div>
+        <Box mt={3}>
+          <Typography variant="h5" gutterBottom>
+            Payee Details
+          </Typography>
+          <Typography variant="body1">Full Name: {userDetails.fullName}</Typography>
+          <Typography variant="body1">Email: {userDetails.email}</Typography>
+          <Typography variant="body1">Account Number: {userDetails.accountNumber}</Typography>
+        </Box>
       )}
-    </div>
+    </Container>
   );
 };
 

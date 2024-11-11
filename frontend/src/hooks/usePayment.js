@@ -21,7 +21,7 @@ export const usePayment = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // Attach the JWT token
+                    'Authorization': `Bearer ${token}` 
                 },
                 body: JSON.stringify(paymentData)
             });
@@ -33,7 +33,7 @@ export const usePayment = () => {
             }
 
             setIsLoading(false);
-            return data; // Return payment data if successful
+            return data;
         } catch (err) {
             setIsLoading(false);
             setError(err.message);
