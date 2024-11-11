@@ -8,7 +8,7 @@ const EmployeeDashboard = () => {
     const fetchPayments = async () => {
       try {
         const token = localStorage.getItem('employeeToken');
-        const response = await fetch('http://localhost:5000/api/employee/payments', {
+        const response = await fetch('https://localhost:5000/api/employee/payments', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
