@@ -24,7 +24,17 @@ const paymentSchema = new Schema({
     swiftCode:{
         type: String,
         required: true
-    }
+    },
+
+    userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    },
+    verified: {
+        type: Boolean,
+        default: false,
+    },
 }, {timestamps: true})
 
 

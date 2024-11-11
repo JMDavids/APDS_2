@@ -1,32 +1,108 @@
 const express = require('express');
-const { loginEmployee, logoutEmployee } = require('../controllers/employeeController');
+const { loginEmployee } = require('../controllers/employeeController');
 const ExpressBrute = require('express-brute');
-const helmet = require('helmet');
+const Payment = require('../models/paymentModel');
+const User = require('../models/userModel');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const router = express.Router();
 
-// Apply helmet for security headers to prevent common attacks (XSS, etc.)
-router.use(helmet());
-
-// Use memory store to store failed login attempts (simple in-memory storage for demo purposes)
+// Brute-force protection setup
 const store = new ExpressBrute.MemoryStore();
 
-// Configure brute-force protection for employee login attempts (5 retries within 10 minutes)
 const bruteForce = new ExpressBrute(store, {
-    freeRetries: 5, // Number of allowed login attempts before blocking
-    minWait: 1000 * 60, // 1-minute wait time after reaching max retries
-    maxWait: 1000 * 60 * 10, // Maximum of 10 minutes block time after repeated failures
-    lifetime: 1000 * 60 * 10, // 10 minutes lifetime for login attempt records
+    freeRetries: 5,
+    minWait: 1000 * 60,
+    maxWait: 1000 * 60 * 10,
+    lifetime: 1000 * 60 * 10,
 });
 
-// Protect the login route with brute-force protection to prevent attacks
-router.post('/login',bruteForce.prevent,  loginEmployee);
+// Login route with brute-force protection
+router.post('/login', bruteForce.prevent, loginEmployee);
+
+// Get all customers without middleware
+router.get('/customers', async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized access' });
+    }
+
+    try {
+        jwt.verify(token, process.env.SECRET_KEY);
+        const customers = await User.find({}, '-password -idNumber -accountNumber');
+        res.json(customers);
+    } catch (error) {
+        res.status(401).json({ error: 'Invalid or expired token' });
+    }
+});
+
+// Get payments for a specific customer without middleware
+router.get('/customers/:userId/payments', async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+  
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized access' });
+    }
+  
+    try {
+      jwt.verify(token, process.env.SECRET_KEY);
+
+      console.log('Fetching payments for userId:', req.params.userId);
+  
+      const payments = await Payment.find({ userId: req.params.userId });
+
+      console.log('Payments found:', payments);
+
+      res.json(payments);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+// Verify a payment without middleware
+router.post('/verify-payment/:paymentId', async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized access' });
+    }
+
+    try {
+        jwt.verify(token, process.env.SECRET_KEY);
+        const payment = await Payment.findById(req.params.paymentId);
+        if (!payment) {
+            return res.status(404).json({ error: 'Payment not found' });
+        }
+        payment.verified = true;
+        await payment.save();
+        res.json({ message: 'Payment verified successfully', payment });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 
+// Get all payments without middleware
+router.get('/payments', async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
 
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized access' });
+    }
 
+    try {
+        jwt.verify(token, process.env.SECRET_KEY);
 
-// Logout route doesn't need brute-force protection; it simply logs the employee out
+        const payments = await Payment.find({});
+        res.json(payments);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
+// ... existing routes ...
 
 module.exports = router;

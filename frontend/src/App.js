@@ -1,19 +1,19 @@
+// App.js
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/login';
 import Navbar from './components/navbar';
 import Registration from './components/RegisterForm'; 
-import Payment from './components/payment';            
-
+import Payment from './components/payment';
+import EmployeeDashboard from './components/EmployeeDashboard';
 import EmployeeLoginPage from './pages/employee';
+
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Navbar />  {/* Navbar will remain visible across all routes */}
+        <Navbar /> {/* Navbar will remain visible across all routes */}
         <div className='pages'>
           <Routes>
-          
-
             {/* Route to login page */}
             <Route path='/' element={<Login />} />
 
@@ -23,7 +23,11 @@ function App() {
             {/* Route to payment page */}
             <Route path='/payment' element={<Payment />} />
 
-            <Route path="/employee" element={<EmployeeLoginPage/>} /> {/* Define employee login route */}
+            {/* Define employee login route */}
+            <Route path="/employee" element={<EmployeeLoginPage />} />
+
+            {/* Route to Employee Dashboard */}
+            <Route path="/dashboard" element={<EmployeeDashboard />} />
           </Routes>
         </div>
       </BrowserRouter>

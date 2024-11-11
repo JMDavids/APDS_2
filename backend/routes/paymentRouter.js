@@ -1,11 +1,12 @@
 const express = require('express');
 const { createPayment, getPayments, getPayment } = require('../controllers/paymentController');
-const authMiddleware = require('../authMiddleware'); // Import the auth middleware
+// Remove the import of authMiddleware
+// const authMiddleware = require('../authMiddleware');
 
 const router = express.Router();
 
-// Use the auth middleware to protect the payment routes
-router.use(authMiddleware);
+// Remove the middleware application
+// router.use(authMiddleware);
 
 // Get all payments for the logged-in user
 router.get('/', getPayments);

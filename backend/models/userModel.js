@@ -35,6 +35,7 @@ const userSchema = new Schema({
     }
 }, { timestamps: true });
 
+/*
 function validateSAID(idNumber) {
     // Check if the ID is exactly 13 digits long and contains only numbers
     if (!/^\d{13}$/.test(idNumber)) {
@@ -66,6 +67,12 @@ function validateSAID(idNumber) {
 
     return luhn(idNumber);
 }
+*/
+
+function validateSAID(idNumber) {
+    // Check if the ID is exactly 13 digits long and contains only numbers
+    return /^\d{13}$/.test(idNumber);
+}
 
 
 // Adding the signup function
@@ -93,7 +100,7 @@ userSchema.statics.signup = async function (fullName, email, idNumber, accountNu
 
     // Use simplified validation for ID number (13 digits check only)
     if (!validateSAID(idNumber)) {
-        throw Error('ID number invalid');
+        throw Error('ID number must be exactly 13 digits and numeric');
     }
 
     // Validate account number length

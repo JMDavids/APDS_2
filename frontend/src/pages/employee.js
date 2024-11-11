@@ -25,7 +25,7 @@ const EmployeeLoginPage = () => {
                 setIsAuthenticated(true);
                 setErrorMessage(''); // Clear error if successful
                 // Redirect to the dashboard (or another page) after successful login
-                navigate('/payment');  // Redirect to your desired page
+                navigate('/dashboard');  // Redirect to your desired page
             } else {
                 setErrorMessage(data.message || 'Login failed');
             }
