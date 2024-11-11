@@ -19,8 +19,8 @@ const Login = () => {
     };
 
     return (
-        <Container component="main" maxWidth="xs">
-            <Typography variant="h5" align="center">Login</Typography>
+        <Container component="main" maxWidth="xs" style={{ paddingTop: '100px' }}>
+            <Typography variant="h2" align="center">Login</Typography>
             <form onSubmit={handleLogin}>
                 <TextField
                     variant="outlined"

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useLogout } from '../hooks/useLogout';
 import { useAuthenticationContext } from "../hooks/useAuthenticationContext";
-
+import "../pages/emp.css"
 const Navbar = () => {
     const { logout } = useLogout();
     const { user } = useAuthenticationContext();
@@ -13,9 +13,9 @@ const Navbar = () => {
     return (
         <header>
             <div className="container">
-                <Link to="/">
+               
                     <h1>International Payment System</h1>
-                </Link>
+                
                 <nav>
                     {user && (
                         <div>
@@ -25,7 +25,7 @@ const Navbar = () => {
                     )}
                     {!user && (
                         <div>
-                            <Link to='/login'>
+                            <Link to='/'>
                                 <h3>Login</h3>
                             </Link>
                             <Link to='/register'>

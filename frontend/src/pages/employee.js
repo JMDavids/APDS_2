@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate from react-router-dom
+import { useNavigate } from 'react-router-dom';
+import { Button, TextField, Typography, Container, CircularProgress } from '@mui/material';
 
 const EmployeeLoginPage = () => {
     const [empID, setEmpID] = useState('');
@@ -7,11 +8,13 @@ const EmployeeLoginPage = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [employee, setEmployee] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);  // Add isLoading state
 
     const navigate = useNavigate();  // Initialize useNavigate hook
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);  // Set loading to true before the request
         try {
             const response = await fetch('https://localhost:5000/api/employee/login', {
                 method: 'POST',
@@ -32,6 +35,8 @@ const EmployeeLoginPage = () => {
         } catch (error) {
             console.error('Login error:', error);
             setErrorMessage('An error occurred during login');
+        } finally {
+            setIsLoading(false);  // Set loading to false after the request completes
         }
     };
 
@@ -45,27 +50,44 @@ const EmployeeLoginPage = () => {
     }
 
     return (
-        <div>
-            <h2>Employee Login</h2>
-            <form onSubmit={handleSubmit}>
-                <input
+        <Container component="main" maxWidth="xs" style={{ paddingTop: '100px' }}>
+            <Typography variant="h2" align="center">Login</Typography>
+            <form onSubmit={handleSubmit}>  {/* Use handleSubmit here */}
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Employee ID"
                     type="text"
-                    placeholder="Employee ID"
-                    value={empID}
                     onChange={(e) => setEmpID(e.target.value)}
-                    required
+                    value={empID} 
                 />
-                <input
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Password"
                     type="password"
-                    placeholder="Password"
-                    value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    required
+                    value={password}
                 />
-                <button type="submit">Login</button>
+             
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    disabled={isLoading}  
+                    style={{ position: 'relative' }}
+                >
+                    {isLoading && <CircularProgress size={24} style={{ position: 'absolute' }} />}
+                    Login
+                </Button>
+                {errorMessage && <div style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</div>}
             </form>
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-        </div>
+        </Container>
     );
 };
 
